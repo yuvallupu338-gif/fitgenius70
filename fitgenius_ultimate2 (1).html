@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FitGenius AI - Ultimate v2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap');
+        :root{--bg-dark:#050a11;--card-bg:rgba(20,20,25,0.7);--neon:#00ffcc;--neon-glow:rgba(0,255,204,0.4);--gold:#ffcc00;--gold-glow:rgba(255,204,0,0.4);--text-main:#ffffff;--text-muted:#9ca3af;--border:rgba(255,255,255,0.08);--split:#0096ff;--danger:#ef4444;--sport:#ff3366;--success:#22c55e;}
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Assistant',sans-serif;-webkit-tap-highlight-color:transparent;}
+        body{background:linear-gradient(-45deg,#050a11,#121927,#050a11);background-size:400% 400%;animation:gradientBG 15s ease infinite;color:var(--text-main);min-height:100vh;overflow-x:hidden;}
+        @keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .glass-card{background:var(--card-bg);border:1px solid var(--border);border-radius:28px;padding:30px 25px;margin-bottom:25px;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);box-shadow:0 15px 35px rgba(0,0,0,0.5),inset 0 1px 1px rgba(255,255,255,0.05);animation:fadeIn 0.4s ease-out;}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .header-title{background:linear-gradient(135deg,var(--neon),#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:3.8rem;font-weight:800;text-align:center;margin:25px 0 10px;}
+        input[type="text"],input[type="number"],select,textarea{width:100%;padding:18px;margin-bottom:18px;border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:rgba(0,0,0,0.3);color:white;font-size:16px;transition:0.3s ease;resize:none;}
+        input:focus,select:focus,textarea:focus{outline:none;border-color:var(--neon);box-shadow:0 0 10px var(--neon-glow);}
+        ::placeholder{color:rgba(255,255,255,0.4);}
+        .btn{width:100%;padding:20px;border-radius:18px;border:none;font-weight:800;font-size:1.25rem;cursor:pointer;transition:all 0.3s ease;margin-bottom:15px;display:block;text-align:center;text-decoration:none;}
+        .btn:active{transform:scale(0.96);}
+        .btn-neon{background:linear-gradient(135deg,var(--neon),#3b82f6);color:#000;}
+        .btn-gold{background:linear-gradient(135deg,var(--gold),#ffb703);color:#000;}
+        .btn-outline{background:transparent;border:2px solid var(--neon);color:var(--neon);}
+        .days-grid{display:flex;justify-content:space-between;margin-bottom:25px;direction:rtl;}
+        .day-btn{width:45px;height:45px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer;background:rgba(0,0,0,0.4);color:var(--text-muted);transition:0.2s;}
+        .day-btn.active{border-color:var(--neon);background:var(--neon);color:#000;box-shadow:0 0 15px var(--neon-glow);}
+        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:25px;}
+        .stat-box{background:rgba(0,0,0,0.3);padding:22px;border-radius:18px;text-align:center;border:1px solid rgba(255,255,255,0.05);}
+        .stat-val{display:block;font-size:32px;font-weight:800;margin-top:5px;}
+        .checklist-item{background:rgba(0,0,0,0.4);padding:15px 20px;border-radius:15px;display:flex;align-items:center;gap:15px;margin-bottom:15px;border:1px solid rgba(255,255,255,0.05);}
+        .checklist-item input[type="checkbox"]{width:25px;height:25px;accent-color:var(--success);margin:0;cursor:pointer;}
+        .meal-box{background:rgba(0,0,0,0.4);padding:20px;border-radius:15px;margin-bottom:20px;border-right:4px solid var(--gold);}
+        .meal-title{font-weight:800;color:var(--gold);font-size:1.3rem;margin-bottom:10px;border-bottom:1px solid rgba(255,204,0,0.2);padding-bottom:8px;}
+        .meal-option{margin-bottom:10px;color:#e5e7eb;line-height:1.5;font-size:1.05rem;}
+        .meal-option strong{color:var(--neon);}
+        .health-section{margin:20px 0;border:1px solid rgba(239,68,68,0.3);border-radius:18px;background:rgba(239,68,68,0.05);overflow:hidden;}
+        .health-title{background:rgba(239,68,68,0.15);color:var(--danger);padding:14px;font-weight:800;text-align:center;font-size:1.1rem;border-bottom:1px solid rgba(239,68,68,0.3);}
+        .health-scroll-box{height:140px;overflow-y:auto;padding:15px;font-size:0.9rem;color:#d1d5db;line-height:1.7;text-align:right;}
+        .health-scroll-box li{margin-bottom:8px;margin-right:15px;}
+        .health-checkbox-container{display:flex;align-items:center;gap:12px;padding:15px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(239,68,68,0.3);}
+        .health-checkbox-container input[type="checkbox"]{width:24px;height:24px;cursor:pointer;accent-color:var(--danger);}
+        .progress-container{width:100%;height:10px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;margin-bottom:30px;}
+        .progress-bar{height:100%;background:linear-gradient(90deg,#3b82f6,var(--neon));width:0%;transition:width 0.5s ease;}
+        .target-muscle{color:var(--neon);font-size:1.1rem;font-weight:800;text-transform:uppercase;margin-bottom:10px;display:block;}
+        .exercise-name{font-size:2.6rem;font-weight:800;margin-bottom:10px;line-height:1.1;}
+        .exercise-reps{font-size:1.4rem;color:#d1d5db;margin-bottom:25px;font-weight:600;}
+        .exercise-desc{background:rgba(0,0,0,0.4);padding:20px;border-radius:18px;font-size:1.1rem;color:#e5e7eb;margin-bottom:30px;border-right:4px solid var(--neon);text-align:right;line-height:1.6;}
+        .sets-indicator{display:flex;justify-content:center;gap:14px;margin-bottom:40px;}
+        .set-dot{width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;transition:0.3s;background:rgba(0,0,0,0.4);}
+        .set-dot.active{border-color:var(--neon);color:var(--neon);transform:scale(1.15);box-shadow:0 0 15px var(--neon-glow);}
+        .set-dot.done{background:var(--neon);border-color:var(--neon);color:#000;}
+        .timer-mode{background:transparent!important;border:2px solid var(--neon)!important;color:var(--neon)!important;font-size:2.5rem!important;}
+        .hidden{display:none!important;}
+        .container{max-width:600px;margin:0 auto;padding:20px;}
+    </style>
+</head>
+<body>
+    <div id="screen-setup" class="container">
+        <h1 class="header-title">FitGenius AI</h1>
+        <p style="text-align:center;color:var(--text-muted);margin-bottom:25px;">בניית תוכנית מותאמת אישית</p>
+        <div class="glass-card">
+            <input type="text" id="setup-name" placeholder="שם מתאמן (למשל: לופו)">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                <input type="number" id="setup-age" placeholder="גיל">
+                <input type="number" id="setup-weight" placeholder="משקל (ק&quot;ג)">
+            </div>
+            <input type="number" id="setup-height" placeholder="גובה (ס&quot;מ)">
+            <label style="color:var(--neon);font-weight:600;display:block;margin-bottom:8px;">המטרה שלך:</label>
+            <select id="setup-goal" onchange="window.app.toggleCardioSelector()">
+                <option value="mass">מסה ובניית שריר 💪</option>
+                <option value="cut_men">חיטוב גברים ⚡</option>
+                <option value="cut_women">חיטוב נשים ⏳</option>
+                <option value="adults">מבוגרים (בריאות וגמישות) 🧘</option>
+            </select>
+            <div id="cardio-container" class="hidden" style="background:rgba(255,51,102,0.1);padding:15px;border-radius:15px;border:1px solid #ff3366;margin-bottom:18px;">
+                <label style="color:#ff3366;font-weight:800;display:block;margin-bottom:8px;">🔥 יום אירובי חובה (45 דק'):</label>
+                <p style="font-size:0.9rem;color:#ddd;margin-bottom:10px;">בחרת חיטוב! בחר יום שבו תעשה רק אירובי.</p>
+                <select id="setup-cardio-day" style="margin-bottom:0;">
+                    <option value="0">ראשון</option><option value="1">שני</option><option value="2">שלישי</option>
+                    <option value="3">רביעי</option><option value="4">חמישי</option><option value="5">שישי</option><option value="6">שבת</option>
+                </select>
+            </div>
+            <label style="color:var(--neon);font-weight:600;display:block;margin-bottom:8px;">איפה אתה מתאמן?</label>
+            <select id="setup-equip">
+                <option value="gym">חדר כושר מלא</option>
+                <option value="home">בית (ללא ציוד)</option>
+                <option value="park">פארק כושר (מתקני רחוב)</option>
+            </select>
+            <label style="color:var(--neon);font-weight:600;display:block;margin-bottom:8px;">זמן אימון כוח:</label>
+            <select id="setup-duration">
+                <option value="30">30 דקות</option>
+                <option value="45" selected>45 דקות</option>
+                <option value="60">60 דקות</option>
+                <option value="90">90 דקות</option>
+            </select>
+            <label style="color:var(--neon);font-weight:600;display:block;margin-bottom:10px;margin-top:10px;">ימי אימון בשבוע:</label>
+            <div class="days-grid" id="setup-days">
+                <div class="day-btn" onclick="this.classList.toggle('active')" data-day="0">א</div>
+                <div class="day-btn" onclick="this.classList.toggle('active')" data-day="1">ב</div>
+                <div class="day-btn" onclick="this.classList.toggle('active')" data-day="2">ג</div>
+                <div class="day-btn" onclick="this.classList.toggle('active')" data-day="3">ד</div>
+                <div class="day-btn" onclick="this.classList.toggle('active')" data-day="4">ה</div>
+                <div class="day-btn" onclick="this.classList.toggle('active')" data-day="5">ו</div>
+                <div class="day-btn" onclick="this.classList.toggle('active')" data-day="6">ש</div>
+            </div>
+            <div class="health-section">
+                <div class="health-title">⚠️ הצהרת בריאות מחייבת</div>
+                <div class="health-scroll-box">
+                    <strong>אנא קרא/י בעיון לפני אישור:</strong>
+                    <ul style="padding-right:15px;margin-top:8px;">
+                        <li>אני מצהיר/ה בזאת כי מצבי הבריאותי תקין לחלוטין ואני כשיר/ה למאמץ גופני עצים.</li>
+                        <li>איני סובל/ת מבעיות לב, שינויים קיצוניים בלחץ דם, קשיי נשימה, אסתמה חמורה, סחרחורות כרוניות או התעלפויות.</li>
+                        <li>איני סובל/ת מבעיות אורתופדיות, פריצות דיסק, קרעים בגידים/שרירים, או כאבי מפרקים.</li>
+                        <li>אני יודע/ת כי יש להפסיק מיד את האימון במקרה של כאב חזה, קוצר נשימה, סחרחורת או כאב חריף.</li>
+                        <li>ידוע לי כי התוכנית נוצרה באופן אוטומטי ומהווה המלצה בלבד.</li>
+                        <li><strong>אני מתאמן/ת על אחריותי הבלעדית בלבד</strong> ומוותר/ת על כל טענה כלפי מפתחי המערכת.</li>
+                    </ul>
+                </div>
+                <div class="health-checkbox-container">
+                    <input type="checkbox" id="setup-health">
+                    <label for="setup-health" style="color:var(--text-main);font-weight:600;">קראתי, הבנתי ואני מאשר/ת את הצהרת הבריאות.</label>
+                </div>
+            </div>
+            <button class="btn btn-neon" onclick="window.app.finishSetup()" style="margin-top:20px;">צור את התוכנית שלי 🚀</button>
+        </div>
+    </div>
+
+    <div id="screen-dash" class="container hidden">
+        <h2 style="font-size:2.5rem;font-weight:800;margin:15px 0 25px;">היי <span id="dash-name" style="color:var(--neon);"></span>!</h2>
+        <div class="stats-grid">
+            <div class="stat-box"><span style="color:var(--text-muted);font-size:0.95rem;">BMI</span><span class="stat-val" id="dash-bmi">--</span></div>
+            <div class="stat-box"><span style="color:var(--text-muted);font-size:0.95rem;">יעד קלורי</span><span class="stat-val" id="dash-cals" style="color:var(--gold);">--</span></div>
+        </div>
+        <div class="glass-card">
+            <h3 style="color:var(--success);margin-bottom:15px;font-size:1.4rem;">צ'קליסט להיום ✅</h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-workout" onchange="window.app.saveTracking()">
+                <label for="check-workout" style="font-size:1.2rem;cursor:pointer;">ביצעתי את האימון שלי</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-diet" onchange="window.app.saveTracking()">
+                <label for="check-diet" style="font-size:1.2rem;cursor:pointer;">עמדתי בתפריט התזונה</label>
+            </div>
+        </div>
+        <div class="glass-card" id="dash-workout-card" style="text-align:center;">
+            <div id="dash-split-badge" style="display:inline-block;padding:7px 14px;border-radius:12px;font-weight:800;margin-bottom:15px;background:rgba(0,255,204,0.15);color:var(--neon);border:1px solid var(--neon);">--</div>
+            <h3 id="dash-workout-title" style="margin-bottom:12px;font-size:1.9rem;">האימון להיום</h3>
+            <p id="dash-workout-msg" style="color:#d1d5db;margin-bottom:30px;line-height:1.6;"></p>
+            <button class="btn btn-neon" id="dash-start-btn">התחל אימון</button>
+        </div>
+        <div class="glass-card" style="text-align:center;" id="nutrition-locked">
+            <h3 style="color:var(--gold);margin-bottom:15px;">תוכנית תזונה VIP</h3>
+            <p style="color:#d1d5db;margin-bottom:20px;">הזן קוד שקיבלת מלופו לקבלת 3 אפשרויות תפריט.</p>
+            <a href="https://wa.me/972509344225?text=היי לופו, אני צריך קוד לתזונה!" target="_blank" class="btn btn-outline" style="border-color:var(--gold);color:var(--gold);margin-bottom:15px;">💬 שלח הודעה ללופו</a>
+            <input type="text" id="vip-code-input" placeholder="הכנס קוד VIP כאן..." style="text-align:center;font-size:1.2rem;letter-spacing:2px;">
+            <button class="btn btn-gold" onclick="window.app.unlockNutrition()">פתיחת תוכנית התזונה 🔓</button>
+        </div>
+        <div class="glass-card hidden" id="nutrition-unlocked">
+            <h3 style="color:var(--gold);margin-bottom:15px;font-size:1.8rem;">התזונה שלך 🥗</h3>
+            <label style="color:var(--text-main);font-weight:600;display:block;margin-bottom:8px;">אלרגיות / מאכלים שנואים:</label>
+            <textarea id="nutrition-allergies" rows="2" placeholder="למשל: בוטנים, חלב, דגים..."></textarea>
+            <button class="btn btn-outline" style="border-color:var(--gold);color:var(--gold);" onclick="window.app.generateDiet()">בנה לי 3 תפריטים</button>
+            <div id="diet-plan" class="hidden" style="margin-top:20px;">
+                <p style="color:var(--text-muted);font-size:0.9rem;text-align:center;margin-bottom:15px;">התפריט נקי מ: <strong id="diet-excluded" style="color:var(--danger);"></strong></p>
+                <div id="meals-container"></div>
+            </div>
+        </div>
+        <button class="btn btn-outline" style="border-color:#333;color:#777;" onclick="window.app.resetData()">איפוס נתונים</button>
+    </div>
+
+    <div id="screen-player" class="container hidden">
+        <div style="display:flex;justify-content:space-between;margin-bottom:18px;">
+            <h3 style="font-size:1.6rem;">מצב אימון</h3>
+            <span id="player-progress-text" style="color:var(--neon);font-weight:800;font-size:1.3rem;">1/X</span>
+        </div>
+        <div class="progress-container"><div class="progress-bar" id="player-progress-bar"></div></div>
+        <div class="glass-card" id="player-active-card" style="text-align:center;padding:45px 25px;">
+            <span class="target-muscle" id="player-target">--</span>
+            <h2 class="exercise-name" id="player-name">--</h2>
+            <div class="exercise-reps" id="player-reps">--</div>
+            <div id="player-desc" class="exercise-desc">--</div>
+            <div class="sets-indicator" id="player-sets-container"></div>
+            <button class="btn btn-neon" id="player-main-btn" onclick="window.player.handleAction()" style="padding:24px;font-size:1.4rem;">סיימתי סט! 🏋️</button>
+            <button class="btn btn-outline" id="player-skip-btn" onclick="window.player.skipRest()" style="display:none;margin-top:18px;">דלג על המנוחה</button>
+        </div>
+        <div class="glass-card hidden" id="player-finish-card" style="text-align:center;padding:60px 25px;">
+            <div style="font-size:6rem;margin-bottom:25px;">🏆</div>
+            <h1 style="margin-bottom:15px;font-size:2.8rem;color:var(--gold);">כל הכבוד!</h1>
+            <p style="color:#d1d5db;margin-bottom:40px;">האימון הושלם! הצ'קליסט עודכן אוטומטית.</p>
+            <button class="btn btn-neon" onclick="window.app.nav('screen-player','screen-dash')">חזור ללוח הבקרה</button>
+        </div>
+    </div>
+
+<script>
+    var workoutDB={
+        gym:{
+            full:[{name:"סקוואט חופשי",target:"רגליים",sets:3,reps:"10 חזרות",rest:90,desc:"רד עמוק ודחוף למעלה דרך העקבים."},{name:"לחיצת חזה במוט",target:"חזה",sets:3,reps:"8-10 חזרות",rest:60,desc:"הורד מוט לחזה ודחוק למעלה."},{name:"פולי עליון",target:"גב",sets:3,reps:"10-12 חזרות",rest:60,desc:"משוך את המוט לחזה עליון."},{name:"לחיצת כתפיים",target:"כתפיים",sets:3,reps:"10 חזרות",rest:60,desc:"דחק משקולות מעל הראש."},{name:"פלאנק",target:"בטן",sets:3,reps:"60 שניות",rest:45,desc:"מנח סטטי על האמות."}],
+            upper:[{name:"לחיצת חזה במוט",target:"חזה",sets:4,reps:"8 חזרות",rest:60,desc:"דחיקה בשליטה."},{name:"חתירה במוט",target:"גב",sets:4,reps:"10 חזרות",rest:60,desc:"הטיית גו, משיכה לבטן."},{name:"פרפר בכבלים",target:"חזה",sets:3,reps:"12 חזרות",rest:45,desc:"תנועת חיבוק רחבה."},{name:"לחיצת כתפיים בישיבה",target:"כתפיים",sets:3,reps:"10 חזרות",rest:60,desc:"מעל הראש."},{name:"כפיפת מרפקים",target:"יד קדמית",sets:3,reps:"12 חזרות",rest:45,desc:"עבודה על הבייספס."},{name:"פשיטת מרפקים פולי",target:"יד אחורית",sets:3,reps:"12 חזרות",rest:45,desc:"מרפקים צמודים."}],
+            lower:[{name:"סקוואט חופשי",target:"רגליים",sets:4,reps:"8 חזרות",rest:90,desc:"משקל על השכמות, ירידה מלאה."},{name:"לחיצת רגליים",target:"רגליים",sets:3,reps:"12 חזרות",rest:60,desc:"ללא נעילת ברכיים."},{name:"כפיפת ברכיים",target:"המסטרינג",sets:3,reps:"12 חזרות",rest:60,desc:"כיווץ חזק."},{name:"לאנג'ים הליכה",target:"רגליים",sets:3,reps:"20 צעדים",rest:60,desc:"צעדים גדולים."},{name:"תאומים בעמידה",target:"שוקיים",sets:4,reps:"15 חזרות",rest:45,desc:"עלייה מלאה."}]
+        },
+        home:{
+            full:[{name:"סקוואט קפיצה",target:"רגליים",sets:3,reps:"15 חזרות",rest:60,desc:"קפיצה מתפרצת."},{name:"שכיבות סמיכה",target:"חזה",sets:3,reps:"מקסימום",rest:60,desc:"ירידה מלאה."},{name:"חתירה עם מגבת",target:"גב",sets:3,reps:"15 חזרות",rest:60,desc:"מתיחת מגבת בכוח."},{name:"מקבילים על ספה",target:"יד אחורית",sets:3,reps:"15 חזרות",rest:45,desc:"ירידה עמוקה."},{name:"כפיפות בטן",target:"ליבה",sets:3,reps:"20 חזרות",rest:45,desc:"עלייה חלקית."}],
+            upper:[{name:"שכיבות סמיכה רחבות",target:"חזה",sets:4,reps:"מקסימום",rest:60,desc:"אחיזה רחבה."},{name:"שכיבות יהלום",target:"יד אחורית",sets:3,reps:"10-12 חזרות",rest:60,desc:"ידיים יוצרות יהלום."},{name:"חתירה מגבת/גומייה",target:"גב",sets:4,reps:"15 חזרות",rest:60,desc:"התנגדות חזקה."},{name:"הנפות ידיים בקבוקים",target:"כתפיים",sets:3,reps:"15 חזרות",rest:45,desc:"2 בקבוקי מים."},{name:"מקבילים ספה",target:"יד אחורית",sets:3,reps:"מקסימום",rest:45,desc:"ירידה איטית."}],
+            lower:[{name:"סקוואט איטי",target:"רגליים",sets:4,reps:"15 חזרות",rest:60,desc:"3 שניות ירידה."},{name:"לאנג'ים לאחור",target:"רגליים",sets:4,reps:"12 לכל רגל",rest:60,desc:"חזה זקוף."},{name:"גשר (הרמת אגן)",target:"ישבן",sets:3,reps:"15 חזרות",rest:45,desc:"כיווץ חזק."},{name:"סקוואט קפיצה",target:"כוח מתפרץ",sets:3,reps:"15 חזרות",rest:60,desc:"קפיצה גבוהה."},{name:"עמידה רגל אחת",target:"שיווי משקל",sets:2,reps:"45 שניות",rest:30,desc:"עצימת עיניים לאתגר."}]
+        },
+        park:{
+            full:[{name:"עליות מתח",target:"גב",sets:3,reps:"מקסימום",rest:60,desc:"חזה למוט."},{name:"סקוואט קפיצה",target:"רגליים",sets:3,reps:"20 חזרות",rest:60,desc:"קפיצות בספסלי הפארק."},{name:"מקבילים בפארק",target:"חזה ויד אחורית",sets:3,reps:"10-15",rest:60,desc:"ירידה עמוקה."},{name:"שכיבות סמיכה בשיפוע",target:"חזה",sets:3,reps:"15",rest:45,desc:"ידיים על ספסל."},{name:"הרמות רגליים בתלייה",target:"בטן",sets:3,reps:"12",rest:45,desc:"הרם רגליים לחזה."}],
+            upper:[{name:"עליות מתח רחב",target:"גב",sets:4,reps:"מקסימום",rest:90,desc:"התמקד בשכמות."},{name:"עליות מתח הפוך",target:"יד קדמית",sets:3,reps:"מקסימום",rest:60,desc:"אחיזה ברוחב כתפיים."},{name:"מקבילים מתקן",target:"חזה/יד אחורית",sets:4,reps:"12 חזרות",rest:60,desc:"הטיית גוף קדימה."},{name:"שכיבות רגליים על ספסל",target:"חזה עליון",sets:3,reps:"15 חזרות",rest:60,desc:"משקל קדימה."},{name:"שכיבות סמיכה",target:"חזה",sets:3,reps:"מקסימום",rest:45,desc:"עד כשל."}],
+            lower:[{name:"סקוואט בולגרי",target:"רגליים",sets:3,reps:"12 לכל רגל",rest:60,desc:"רגל אחורית על ספסל."},{name:"קפיצות קופסה",target:"כוח מתפרץ",sets:4,reps:"10 קפיצות",rest:60,desc:"קפוץ לספסל יציב."},{name:"לאנג' הליכה בפארק",target:"רגליים",sets:3,reps:"24 צעדים",rest:60,desc:"הליכה עם כריעה."},{name:"ספרינט בעלייה",target:"רגליים/אירובי",sets:4,reps:"15 שניות",rest:90,desc:"רוץ הכי מהר."},{name:"תאומים על מדרגה",target:"שוקיים",sets:3,reps:"20 חזרות",rest:45,desc:"קצה מדרגה."}]
+        },
+        adults:{
+            full:[{name:"קימה מכיסא",target:"רגליים",sets:3,reps:"12",rest:60,desc:"ללא עזרת ידיים."},{name:"שכיבות סמיכה על קיר",target:"חזה",sets:3,reps:"15",rest:60,desc:"ידיים בקו הכתפיים."},{name:"משיכת גומייה",target:"גב",sets:3,reps:"15",rest:60,desc:"משיכה לכיוון הבטן."},{name:"פלאנק קל",target:"בטן",sets:3,reps:"30 שניות",rest:60,desc:"על שולחן יציב."}],
+            upper:[{name:"שכיבות סמיכה קיר",target:"חזה",sets:4,reps:"15",rest:60,desc:"דחיפה מבוקרת."},{name:"משיכת גומייה/מגבת",target:"גב",sets:4,reps:"15",rest:60,desc:"גב זקוף."},{name:"הרחקת ידיים לצדדים",target:"כתפיים",sets:3,reps:"15",rest:45,desc:"משקל קל."},{name:"כפיפת מרפקים",target:"ידיים",sets:3,reps:"15",rest:45,desc:"גומייה או בקבוקים."}],
+            lower:[{name:"קימה מכיסא",target:"רגליים",sets:4,reps:"12",rest:60,desc:"שליטה מלאה."},{name:"הרחקת רגל הצידה",target:"ירך",sets:3,reps:"12 לכל רגל",rest:45,desc:"אחוז בקיר."},{name:"עליות עקבים",target:"שוקיים",sets:3,reps:"15",rest:45,desc:"אחוז בכיסא."},{name:"מכרע קל",target:"רגליים",sets:3,reps:"10 לכל רגל",rest:60,desc:"חצי תנועה."}]
+        }
+    };
+
+    var app={
+        userData:{},plan:[],VIP_CODE:'LUPU2026',
+        init:function(){var saved=localStorage.getItem('fitgenius_u2');if(saved){this.userData=JSON.parse(saved);this.loadDashboard();}else{this.nav('screen-dash','screen-setup');}},
+        nav:function(f,t){if(document.getElementById(f))document.getElementById(f).classList.add('hidden');if(document.getElementById(t))document.getElementById(t).classList.remove('hidden');window.scrollTo(0,0);},
+        toggleCardioSelector:function(){var goal=document.getElementById('setup-goal').value;var cc=document.getElementById('cardio-container');if(goal==='cut_men'||goal==='cut_women')cc.classList.remove('hidden');else cc.classList.add('hidden');},
+        finishSetup:function(){
+            var name=document.getElementById('setup-name').value;
+            var age=parseFloat(document.getElementById('setup-age').value);
+            var weight=parseFloat(document.getElementById('setup-weight').value);
+            var height=parseFloat(document.getElementById('setup-height').value);
+            var goal=document.getElementById('setup-goal').value;
+            var equip=document.getElementById('setup-equip').value;
+            var duration=document.getElementById('setup-duration').value;
+            if(!name||!age||!weight||!height)return alert("אנא מלא את כל השדות האישיים.");
+            if(!document.getElementById('setup-health').checked)return alert("חובה לאשר הצהרת בריאות.");
+            var activeDays=Array.from(document.querySelectorAll('.day-btn.active')).map(function(b){return parseInt(b.getAttribute('data-day'));});
+            if(activeDays.length===0)return alert("בחר לפחות יום אימון אחד.");
+            var cardioDay=-1;
+            if(goal.includes('cut')){cardioDay=parseInt(document.getElementById('setup-cardio-day').value);if(!activeDays.includes(cardioDay))activeDays.push(cardioDay);}
+            activeDays.sort(function(a,b){return a-b;});
+            var splitMap={};
+            var strengthDays=activeDays.filter(function(d){return d!==cardioDay;});
+            if(strengthDays.length>0){
+                var cats=['full'];var rem=strengthDays.length-1;
+                var upper=Math.ceil(rem/2);var lower=Math.floor(rem/2);
+                for(var i=0;i<upper;i++)cats.push('upper');
+                for(var j=0;j<lower;j++)cats.push('lower');
+                strengthDays.forEach(function(day,idx){splitMap[day]=cats[idx]||'full';});
+            }
+            if(cardioDay!==-1)splitMap[cardioDay]='cardio';
+            var bmi=(weight/Math.pow(height/100,2)).toFixed(1);
+            var bmr=(10*weight)+(6.25*height)-(5*age)+(goal.includes('women')?-161:5);
+            var targetCals=Math.round(bmr*1.55);
+            if(goal==='mass')targetCals+=300;
+            else if(goal.includes('cut'))targetCals-=300;
+            var prev=this.userData;
+            this.userData={name:name,age:age,weight:weight,height:height,goal:goal,equip:equip,duration:duration,cardioDay:cardioDay,days:activeDays,splitMap:splitMap,bmi:bmi,targetCals:targetCals,nutritionUnlocked:prev.nutritionUnlocked||false,allergies:prev.allergies||'',trackingDate:'',trackWorkout:false,trackDiet:false};
+            localStorage.setItem('fitgenius_u2',JSON.stringify(this.userData));
+            this.loadDashboard();
+        },
+        loadDashboard:function(){
+            this.nav('screen-setup','screen-dash');
+            document.getElementById('dash-name').innerText=this.userData.name;
+            document.getElementById('dash-bmi').innerText=this.userData.bmi;
+            document.getElementById('dash-cals').innerText=this.userData.targetCals;
+            var todayStr=new Date().toDateString();
+            if(this.userData.trackingDate!==todayStr){this.userData.trackingDate=todayStr;this.userData.trackWorkout=false;this.userData.trackDiet=false;localStorage.setItem('fitgenius_u2',JSON.stringify(this.userData));}
+            document.getElementById('check-workout').checked=this.userData.trackWorkout;
+            document.getElementById('check-diet').checked=this.userData.trackDiet;
+            this.buildPlan();
+            if(this.userData.nutritionUnlocked){this.nav('nutrition-locked','nutrition-unlocked');document.getElementById('nutrition-allergies').value=this.userData.allergies||'';this.generateDiet();}
+            else{this.nav('nutrition-unlocked','nutrition-locked');}
+        },
+        saveTracking:function(){this.userData.trackWorkout=document.getElementById('check-workout').checked;this.userData.trackDiet=document.getElementById('check-diet').checked;localStorage.setItem('fitgenius_u2',JSON.stringify(this.userData));},
+        buildPlan:function(){
+            var today=new Date().getDay();
+            var btn=document.getElementById('dash-start-btn');
+            var badge=document.getElementById('dash-split-badge');
+            if(!this.userData.days.includes(today)){
+                badge.innerText='מנוחה';badge.style.color='#9ca3af';badge.style.borderColor='#9ca3af';
+                document.getElementById('dash-workout-msg').innerText='היום יום מנוחה. תן לשרירים להתאושש!';
+                btn.style.display='none';this.plan=[];return;
+            }
+            btn.style.display='block';
+            var split=this.userData.splitMap[today];
+            if(split==='cardio'){
+                badge.innerText="אירובי 45 דק' 🏃";badge.style.color='#ff3366';badge.style.borderColor='#ff3366';
+                document.getElementById('dash-workout-msg').innerHTML='היום יום שריפת שומנים! 45 דקות אירובי.<br>ריצה, הליכה מהירה, אופניים או שחייה.';
+                this.plan=[{name:"אירובי חופשי (45 דק')",target:"סיבולת לב-ריאה",sets:1,reps:"45 דקות",rest:0,desc:"בחר את האירובי המועדף ושמור על דופק בינוני-גבוה לאורך כל הזמן."}];
+                return;
+            }
+            var splitNames={full:"פול באדי (גוף מלא)",upper:"פלג גוף עליון",lower:"פלג גוף תחתון"};
+            badge.innerText=splitNames[split]||'אימון כוח';badge.style.color='#00ffcc';badge.style.borderColor='#00ffcc';
+            var cat=this.userData.goal==='adults'?'adults':this.userData.equip;
+            var db=workoutDB[cat]||workoutDB.home;
+            var base=(db[split]||db.full||[]).slice();
+            var dur=parseInt(this.userData.duration);
+            var max=dur>=60?6:dur>=45?5:4;
+            this.plan=base.slice(0,max);
+            document.getElementById('dash-workout-msg').innerHTML='זמן מוקצב: <strong>'+this.userData.duration+' דקות</strong>.<br>יש לך '+this.plan.length+' תרגילים. תן בראש!';
+        },
+        unlockNutrition:function(){if(document.getElementById('vip-code-input').value.trim()===this.VIP_CODE){this.userData.nutritionUnlocked=true;localStorage.setItem('fitgenius_u2',JSON.stringify(this.userData));this.nav('nutrition-locked','nutrition-unlocked');this.generateDiet();}else alert("קוד שגוי. פנה ללופו בוואטסאפ.");},
+        generateDiet:function(){
+            var allergiesInput=document.getElementById('nutrition-allergies').value.trim();
+            this.userData.allergies=allergiesInput;localStorage.setItem('fitgenius_u2',JSON.stringify(this.userData));
+            document.getElementById('diet-plan').classList.remove('hidden');
+            document.getElementById('diet-excluded').innerText=allergiesInput||'אין';
+            var allergies=allergiesInput?allergiesInput.split(',').map(function(a){return a.trim().toLowerCase();}).filter(function(a){return a!=='';}):[]; 
+            var has=function(w){return allergies.some(function(a){return a.includes(w)||w.includes(a);});};
+            var clean=function(t){
+                var r=t;
+                if(has('ביצים'))r=r.replace(/ביצים|ביצה קשה|חביתה|שקשוקה/g,'חביתת קמח חומוס/טופו');
+                if(has('לחם')||has('גלוטן')||has('חיטה'))r=r.replace(/לחם מלא|לחם/g,'פריכיות אורז').replace(/שיבולת שועל/g,'פתיתי כוסמת');
+                if(has('עוף')||has('בשר'))r=r.replace(/חזה עוף|עוף|הודו|פרגיות|קציצות בקר|קציצות הודו/g,'סייטן/דג/טופו');
+                if(has('דגים')||has('טונה')||has('סלמון'))r=r.replace(/טונה|דג סלמון/g,'ביצים/טופו');
+                if(has('טחינה')||has('שומשום'))r=r.replace(/טחינה/g,'שמן זית');
+                if(has('לקטוז')||has('חלב')||has('יוגורט')||has('קוטג'))r=r.replace(/יוגורט חלבון|קוטג'/g,'מעדן סויה');
+                if(has('בוטנים'))r=r.replace(/חמאת בוטנים/g,'חמאת שקדים');
+                return r;
+            };
+            var a1=clean("3 ביצים (חביתה/קשה), 2 פרוסות לחם מלא, חצי אבוקדו וסלט.");
+            var a2=clean("שיבולת שועל עם יוגורט חלבון וכף חמאת בוטנים.");
+            var a3=clean("קוטג' 5%, 2 פרוסות לחם מלא וירקות חתוכים.");
+            var b1=clean("חזה עוף צלוי (150ג'), כוס אורז, ברוקולי וכף טחינה.");
+            var b2=clean("דג סלמון בתנור (150ג'), תפוח אדמה אפוי וסלט.");
+            var b3=clean("קציצות הודו ברוטב עגבניות, חצי כוס פסטה ושעועית ירוקה.");
+            var c1=clean("טונה (קופסה במים), 2 ביצים קשות, כף טחינה וירקות.");
+            var c2=clean("2 פרוסות לחם מלא, גבינה לבנה 5%, חצי אבוקדו וחביתה.");
+            var c3=clean("שקשוקה מ-3 ביצים, פרוסת לחם מלא וסלט.");
+            var html='<div class="meal-box"><div class="meal-title">ארוחת בוקר</div>';
+            html+='<div class="meal-option"><strong>אופציה א:</strong> '+a1+'</div>';
+            html+='<div class="meal-option"><strong>אופציה ב:</strong> '+a2+'</div>';
+            html+='<div class="meal-option"><strong>אופציה ג:</strong> '+a3+'</div></div>';
+            html+='<div class="meal-box"><div class="meal-title">ארוחת צהריים</div>';
+            html+='<div class="meal-option"><strong>אופציה א:</strong> '+b1+'</div>';
+            html+='<div class="meal-option"><strong>אופציה ב:</strong> '+b2+'</div>';
+            html+='<div class="meal-option"><strong>אופציה ג:</strong> '+b3+'</div></div>';
+            html+='<div class="meal-box"><div class="meal-title">ארוחת ערב</div>';
+            html+='<div class="meal-option"><strong>אופציה א:</strong> '+c1+'</div>';
+            html+='<div class="meal-option"><strong>אופציה ב:</strong> '+c2+'</div>';
+            html+='<div class="meal-option"><strong>אופציה ג:</strong> '+c3+'</div></div>';
+            document.getElementById('meals-container').innerHTML=html;
+        },
+        resetData:function(){if(confirm("לאפס הכל?")){localStorage.removeItem('fitgenius_u2');location.reload();}}
+    };
+
+    var player={
+        idx:0,setIdx:0,isResting:false,timer:null,
+        startWorkout:function(){if(!window.app.plan||window.app.plan.length===0)return;this.idx=0;this.setIdx=0;this.isResting=false;document.getElementById('player-active-card').classList.remove('hidden');document.getElementById('player-finish-card').classList.add('hidden');window.app.nav('screen-dash','screen-player');this.render();},
+        render:function(){
+            var ex=window.app.plan[this.idx];
+            document.getElementById('player-name').innerText=ex.name;document.getElementById('player-target').innerText=ex.target;document.getElementById('player-desc').innerText=ex.desc;document.getElementById('player-reps').innerText=ex.reps;
+            document.getElementById('player-progress-bar').style.width=(this.idx/window.app.plan.length*100)+'%';document.getElementById('player-progress-text').innerText=(this.idx+1)+'/'+window.app.plan.length;
+            var c=document.getElementById('player-sets-container');c.innerHTML='';
+            for(var i=0;i<ex.sets;i++){var d=document.createElement('div');d.className='set-dot'+(i<this.setIdx?' done':i===this.setIdx?' active':'');d.innerText=i+1;c.appendChild(d);}
+            this.resetBtn();
+        },
+        handleAction:function(){
+            if(this.isResting)return;
+            var ex=window.app.plan[this.idx];this.setIdx++;
+            if(this.setIdx>=ex.sets){this.idx++;this.setIdx=0;if(this.idx>=window.app.plan.length)return this.finish();this.render();}
+            else{this.startRest(ex.rest||60);this.renderDots();}
+        },
+        renderDots:function(){var ex=window.app.plan[this.idx];var c=document.getElementById('player-sets-container');c.innerHTML='';for(var i=0;i<ex.sets;i++){var d=document.createElement('div');d.className='set-dot'+(i<this.setIdx?' done':i===this.setIdx?' active':'');d.innerText=i+1;c.appendChild(d);}},
+        startRest:function(s){this.isResting=true;var btn=document.getElementById('player-main-btn');btn.classList.add('timer-mode');document.getElementById('player-skip-btn').style.display='inline-block';var t=s;var m=Math.floor(t/60);var sec=t%60;btn.innerText='⏱️ '+m+':'+(sec<10?'0':'')+sec;var self=this;this.timer=setInterval(function(){t--;m=Math.floor(t/60);sec=t%60;btn.innerText='⏱️ '+m+':'+(sec<10?'0':'')+sec;if(t<=0)self.skipRest();},1000);},
+        skipRest:function(){clearInterval(this.timer);this.isResting=false;this.resetBtn();},
+        resetBtn:function(){var btn=document.getElementById('player-main-btn');btn.classList.remove('timer-mode');btn.innerText='סיימתי סט! 🏋️';document.getElementById('player-skip-btn').style.display='none';},
+        finish:function(){
+            document.getElementById('player-progress-bar').style.width='100%';
+            document.getElementById('player-active-card').classList.add('hidden');
+            document.getElementById('player-finish-card').classList.remove('hidden');
+            document.getElementById('check-workout').checked=true;
+            window.app.saveTracking();
+        }
+    };
+
+    window.app=app;window.player=player;
+    document.getElementById('dash-start-btn').addEventListener('click',function(){window.player.startWorkout();});
+    window.onload=function(){window.app.init();};
+</script>
+</body>
+</html>
